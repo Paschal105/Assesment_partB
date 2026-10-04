@@ -1,0 +1,53 @@
+Write diffObjects(oldObj, newObj) 
+that returns an object describing what changed: { added: {...}, removed: {...}, changed: {...} }, comparing only top-level keys.
+
+
+function diffObjects(oldObj, newObj) {  /*   *   *   *   *   *   */}
+console.log(diffObjects(  { name: 'Setemi', role: 'Engineer', country: 'Jamaica' },  
+'{ name: 'Setemi', role: 'Senior Engineer', city: 'Kingston' }))// '
+{ added: { city: 'Kingston' }, removed: { country: 'Jamaica' }, 
+changed: { role: { from: 'Engineer', to: 'Senior Engineer' } } }function diffObjects(oldObj, newObj) {
+Concepts: Object.keys, Set for key comparison, building a result object
+
+
+function diffObjects(oldObj, newObj) {
+   const result = {
+        added : {},
+        removed : {},
+        changed : {}
+   }
+  //lets get the values that will help in compared the variables
+  const valueOld = Object.keys(oldObj);
+  const valueNew = Object.keys(newObj);
+  // now lets create a set of keys
+  const newSet = new Set(valueNew);
+  const oldSet = new Set(valueOld);
+
+  for (let i = 0; i < valueOld.length; i++) {
+    const key = valueOld[i];
+  //if the old value is not in the new set of values it will be removed 
+    if (!newSet.has(key)) {
+      result.removed[key] = oldObj[key];
+    }
+
+    else if (oldObj[key] !== newObj[key]) {
+      result.changed[key] = {
+        from: oldObj[key],
+        to: newObj[key]
+      };
+    }
+  }
+  for (let i = 0; i < valueNew.length; i++) {
+    const key = valueNew[i];
+  
+    if(!oldSet.has(key)){
+      result.added[key] = newObj[key]
+    }
+  }
+    return result;
+}
+console.log(diffObjects(
+  { name: 'Setemi', role: 'Engineer', country: 'Jamaica' },
+  { name: 'Setemi', role: 'Senior Engineer', city: 'Kingston' }
+))
+// { added: { city: 'Kingston' }, removed: { country: 'Jamaica' }, changed: { role: { from: 'Engineer', to: 'Senior Engineer' } } }
